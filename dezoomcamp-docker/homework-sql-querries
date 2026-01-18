@@ -1,0 +1,31 @@
+-- Module 1 Docker Terraform
+-- Question 3. Counting short trips 
+SELECT COUNT(*) AS trips_le_1_mile
+FROM green_taxi_data
+WHERE lpep_pickup_datetime >= TIMESTAMP '2025-11-01'
+  AND lpep_pickup_datetime <  TIMESTAMP '2025-12-01'
+  AND trip_distance <= 1;
+
+-- Question 4. Longest trip for each day
+SELECT
+    DATE(lpep_pickup_datetime) AS pickup_day,
+    lpep_pickup_datetime,
+    trip_distance
+FROM green_taxi_data
+WHERE trip_distance < 100
+ORDER BY trip_distance DESC
+LIMIT 1;
+
+-- Question 5. Biggest pickup zone
+SELECT
+    tz."Zone" AS pickup_zone,
+    SUM(g.total_amount) AS total_revenue
+FROM green_taxi_data g
+JOIN taxi_zones tz
+    ON g."PULocationID" = tz."LocationID"
+WHERE g.lpep_pickup_datetime >= TIMESTAMP '2025-11-18'
+  AND g.lpep_pickup_datetime <  TIMESTAMP '2025-11-19'
+GROUP BY tz."Zone"
+ORDER BY total_revenue DESC
+LIMIT 1;
+
